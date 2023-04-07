@@ -1,0 +1,30 @@
+<?php
+$db_name="student";
+$connection = mysqli_connect('localhost','root','','student');
+mysqli_select_db($connection,$db_name );
+$output='';
+if(isset($_POST['search'])){
+    $searchq= $_POST['search'];
+    $searchq=preg_replace("#[^0-9a-z]#i", "", $searchq);
+
+    $query = mysqli_query($connection,"SELECT * FROM name WHERE firstname LIKE '%$searchq%' OR lastname LIKE '%$searchq%'") or die("Could not search!");
+    $count = mysqli_num_rows($query);
+
+    if($count == 0){
+        $output="There was no search result!";
+    }
+    else{
+        while($row=mysqli_fetch_array($query)){
+            $firstname=$row['firstname'];
+            $lastname=$row['lastname'];
+
+            $output .='<div>'.$firstname.'  '.$lastname.'</div>';
+
+            
+
+        }
+    }
+}
+?>
+
+<?php print("$output");?>
